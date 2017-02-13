@@ -25,7 +25,7 @@ func (s *Stats) NewCounter(name string) *Counter {
 		}
 	}
 
-	c := &Counter{name, compressName(name), 0}
+	c := &Counter{name, s.compressName(name), 0}
 	s.counters = append(s.counters, c)
 
 	s.mu.Unlock()

@@ -17,16 +17,6 @@ import (
 
 var ErrLengthTooLong = errors.New("statsi: length too long to marshal")
 
-var ShocoModel = shoco.FilePathModel
-
-func compressName(name string) string {
-	if ShocoModel == nil {
-		return name
-	}
-
-	return string(ShocoModel.ProposedCompress([]byte(name)))
-}
-
 const majorVersion = 0x01
 
 type tag byte
@@ -38,6 +28,8 @@ const (
 var now = time.Now // for testing
 
 type Stats struct {
+	NameModel *shoco.Model
+
 	mu       sync.Mutex
 	last     time.Time
 	counters []*Counter
@@ -45,8 +37,18 @@ type Stats struct {
 
 func New() *Stats {
 	return &Stats{
+		NameModel: shoco.FilePathModel,
+
 		last: now(),
 	}
+}
+
+func (s *Stats) compressName(name string) string {
+	if s.NameModel == nil {
+		return name
+	}
+
+	return string(s.NameModel.ProposedCompress([]byte(name)))
 }
 
 func (s *Stats) marshal() ([]byte, error) {
