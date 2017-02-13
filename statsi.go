@@ -11,9 +11,21 @@ import (
 	"errors"
 	"sync"
 	"time"
+
+	"github.com/tmthrgd/shoco"
 )
 
 var ErrLengthTooLong = errors.New("statsi: length too long to marshal")
+
+var ShocoModel = shoco.FilePathModel
+
+func compressName(name string) string {
+	if ShocoModel == nil {
+		return name
+	}
+
+	return string(ShocoModel.ProposedCompress([]byte(name)))
+}
 
 const majorVersion = 0x01
 
